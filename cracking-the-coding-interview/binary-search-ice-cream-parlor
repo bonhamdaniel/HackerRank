@@ -1,0 +1,90 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+class IceCream implements Comparable{
+    int flavor;
+    int index;
+
+    public IceCream(int flavor, int index) {
+        this.flavor = flavor;
+        this.index = index;
+    }
+   
+    @Override
+    public int compareTo(Object o) {
+       IceCream ic = (IceCream)o;
+       if (this.flavor == ic.flavor && this.index < ic.index) return -1;
+       else if (this.flavor == ic.flavor && this.index > ic.index) return 1;
+       else if (this.flavor > ic.flavor) return 1;
+       else if (this.flavor < ic.flavor) return -1;
+       else return 0;
+    }
+
+    @Override
+    public boolean equals(Object o){
+       int ic = (int)o;
+       //System.out.println(this.flavor + "\t" + ic + "\t" + (this.flavor == ic));
+       return this.flavor == ic;
+    }
+        
+}
+
+public class Solution {
+   
+    public static int binarySearch(int first, int last, IceCream[] arr, int search) {
+        if (last < first) return -1;
+        int index = -1;
+        
+        while (first <= last) {
+            int mid = first + (last - first) / 2;
+            //System.out.println("Mid: " + mid + "Flav: " + arr[mid].flavor);
+            
+            if (arr[mid].equals(search)) {
+                return arr[mid].index;
+            }
+            else if (arr[mid].flavor > search ) last = mid - 1;
+            else first = mid + 1;
+        }
+       return -1;
+    }
+
+    public static void main(String[] args) {
+        
+        int t;
+        int n, m;
+ 
+        Scanner in = new Scanner(System.in);
+        t = in.nextInt();
+       for(int test = 0; test < t; test++) {       
+            
+            m = in.nextInt();
+            n = in.nextInt(); 
+            IceCream[] arr = new IceCream[n];
+    
+            for (int i = 0; i < n; i++)
+                arr[i] = new IceCream(in.nextInt(), i + 1);
+            
+            Arrays.sort(arr);
+            //for(IceCream ic : arr)
+              //  System.out.println(ic.index + ":" + ic.flavor);
+            int firstIndex = 100000, secondIndex = 100000;
+            for(int i = 0; i < n - 1 ; i++) {
+                int search = m - arr[i].flavor;
+                if(search >= arr[i].flavor) {
+                    int index = binarySearch( i + 1, n - 1, arr, search);
+                    if( index != -1 ) {
+                        System.out.println( Math.min(arr[i].index, index) + " " + Math.max(arr[i].index, index));
+                        break;
+
+                    }
+                }
+            } 
+            
+        }
+        
+    }
+                        
+}
