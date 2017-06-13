@@ -1,0 +1,62 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int[] a = new int[n];
+        Heap heap = new Heap();
+        for(int a_i=0; a_i < n; a_i++){
+            a[a_i] = in.nextInt();
+            heap.add(a[a_i]);
+            //heap.print();
+            System.out.printf("%.1f\n", heap.getMedian());
+        }
+        
+    }
+}
+
+class Heap {
+    PriorityQueue<Integer> high;
+    PriorityQueue<Integer> low;
+    
+    public Heap() {
+        high = new PriorityQueue<Integer>();
+        low = new PriorityQueue<Integer>(11, Collections.reverseOrder());
+    }
+    
+    public void add(int i) {
+        if (high.size() > low.size()) low.add(i);
+        else high.add(i);
+        if (!low.isEmpty()) {
+            if (low.peek() > high.peek()) {
+                int tempL = low.poll();
+                int tempH = high.poll();
+                low.add(tempH);
+                high.add(tempL);
+            }
+        }
+    }
+    
+    public double getMedian() {
+        //System.out.println(high.size() + " " + low.size());
+        if (high.size() == low.size()) return (high.peek() + low.peek()) / 2.0;
+        else return high.peek();
+    }
+    
+    public void print() {
+        for(int i : low) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        for(int i : high) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
