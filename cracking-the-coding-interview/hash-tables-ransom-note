@@ -1,0 +1,35 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int m = in.nextInt();
+        int n = in.nextInt();
+        int[] magazine = new int[m];
+        for(int magazine_i=0; magazine_i < m; magazine_i++){
+            magazine[magazine_i] = in.next().hashCode();
+        }
+        Arrays.sort(magazine);
+        //for(int s : magazine) System.out.println(s);
+        boolean yes = false;
+        for(int ransom_i=0; ransom_i < n; ransom_i++){
+            int current = in.next().hashCode();
+            yes = false;
+            for (int j = 0; j < magazine.length; j++) {
+                if (magazine[j] == current) {
+                    yes = true;
+                    magazine[j] = -1;
+                    break;
+                }
+                else if (magazine[j] - current > 0) break;
+            }
+            if (!yes) break;
+        }
+        System.out.println((yes) ? "Yes" : "No");
+    }
+}
