@@ -1,0 +1,32 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+public class Solution {
+    public static int numberNeeded(StringBuilder first, StringBuilder second) {
+        int count = 0;
+        boolean anagrams = false;
+        while(first.length() != 0 && second.length() != 0) {
+            if(second.toString().contains(Character.toString(first.charAt(0)))) {
+                second.deleteCharAt(second.indexOf(Character.toString(first.charAt(0))));
+                first.deleteCharAt(0);
+            }
+            else {
+                first.deleteCharAt(0);
+                count++;
+            }
+        }
+        if (first.length() == 0) count += second.length();
+        else count += first.length();
+               
+        return count;
+    }
+  
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String a = in.next();
+        String b = in.next();
+        System.out.println(numberNeeded(new StringBuilder(a), new StringBuilder(b)));
+    }
+}
