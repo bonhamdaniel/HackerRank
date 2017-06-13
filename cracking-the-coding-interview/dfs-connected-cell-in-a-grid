@@ -1,0 +1,90 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+    
+    public static int getBiggestRegion(int[][] matrix) {
+        HashMap<Integer, ArrayList<Integer>> graph = getGraph(matrix);
+        int count = 0;
+        int max = 0;
+        Stack<Integer> s = new Stack<Integer>();
+        ArrayList<Integer> closed = new ArrayList<Integer>();
+        int first = graph.keySet().iterator().next();
+        s.add(first);
+        //closed.add(first);
+        while(closed.size() != graph.keySet().size()) {
+            //System.out.println(closed);
+            //System.out.println(graph.keySet());
+            if(!s.isEmpty()) {
+                int current = s.pop();
+                closed.add(current);
+                count++;
+                if (count > max) max = count;
+                //System.out.println("Current: " + current + "\tCurrent max: " + max);
+                for(Integer i : graph.get(current)) {
+                    if (!s.contains(i) && !closed.contains(i)) {
+                        //System.out.println("Adding: " + i);
+                        s.add(i);
+                        //closed.add(i);
+                    }
+                    //graph.get(i).remove(current);
+                }
+                //graph.remove(current);
+            }
+            else {
+                if (count > max) max = count;
+                count = 0;
+                for(Integer i : graph.keySet()) {
+                    if (!s.contains(i) && !closed.contains(i)) {
+                        //System.out.println("Starting new region: " + i + "\tCurrent max: " + max);
+                        s.add(i);
+                        //closed.add(i);
+                        break;
+                    }
+                }
+            }
+        }
+        return max;
+    }
+    
+    static HashMap<Integer, ArrayList<Integer>> getGraph(int[][] matrix) {
+        HashMap<Integer, ArrayList<Integer>> graph = new HashMap<Integer, ArrayList<Integer>>();
+        for(int i = 0; i < matrix.length; i++) {
+            for(int j = 0; j < matrix[0].length; j++) {
+                if(matrix[i][j] == 1) {
+                    int nodeNum = i*matrix[0].length + j;
+                    graph.put(nodeNum, new ArrayList<Integer>());
+                }
+            }
+        }
+        for(Integer i : graph.keySet()) {
+            int columns = matrix[0].length;
+            int rows = matrix.length;
+            if ((i % columns != 0) && graph.containsKey(i - columns - 1)) graph.get(i).add(i - columns - 1);
+            if (graph.containsKey(i - columns)) graph.get(i).add(i - columns);
+            if ((i + 1) % columns != 0 && graph.containsKey(i - columns + 1)) graph.get(i).add(i - columns + 1);
+            if ((i % columns != 0) && graph.containsKey(i - 1)) graph.get(i).add(i- 1);
+            if ((i + 1) % columns != 0 && graph.containsKey(i + 1)) graph.get(i).add(i + 1);
+            if ((i % columns != 0) && graph.containsKey(i + columns - 1)) graph.get(i).add(i + columns - 1);
+            if (graph.containsKey(i + columns)) graph.get(i).add(i + columns);
+            if ((i + 1) % columns != 0 && graph.containsKey(i + columns + 1)) graph.get(i).add(i + columns + 1);
+        }
+        return graph;
+    }
+    
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int m = in.nextInt();
+        int grid[][] = new int[n][m];
+        for(int grid_i=0; grid_i < n; grid_i++){
+            for(int grid_j=0; grid_j < m; grid_j++){
+                grid[grid_i][grid_j] = in.nextInt();
+            }
+        }
+        System.out.println(getBiggestRegion(grid));
+    }
+}
