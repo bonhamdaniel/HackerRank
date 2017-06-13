@@ -1,0 +1,21 @@
+/*
+Detect a cycle in a linked list. Note that the head pointer may be 'null' if the list is empty.
+
+A Node is defined as: 
+    class Node {
+        int data;
+        Node next;
+    }
+*/
+
+boolean hasCycle(Node head) {
+    ArrayList<Node> aL = new ArrayList<Node>();
+    aL.add(head);
+    Node current = head;
+    while(current != null) {
+        current = current.next;
+        if (aL.contains(current)) return true;
+        else aL.add(current);
+    }
+    return false;
+}
